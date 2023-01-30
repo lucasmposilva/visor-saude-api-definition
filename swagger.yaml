@@ -1,1 +1,3178 @@
-
+openapi: 3.0.3
+info:
+  title: Visor Saúde
+  description: An Asp.Net Core API.
+  version: v1.0.0
+tags:
+  - name: DadosPessoais
+    description: Endpoints para a gestão dos dados pessoais.
+  - name: Equipes
+    description: Endpoints para a gestão de equipes.
+  - name: Variaveis
+    description: Endpoints para a gestão de variaveis.
+  - name: Exames
+    description: Endpoints para a gestão de exames e testes.
+  - name: Horarios
+    description: Endpoints para a gestão de agendas.
+  - name: Consultas
+    description: Endpoints para a gestão de consultas.
+  - name: Profissionais
+    description: Endpoints para a consultar perfis de profissionais.
+  - name: Anotacoes
+    description: Endpoints para a gestão de anotações.
+  - name: Resultados
+    description: Endpoints para a gestão de resultados de exames e de testes.
+  - name: Arquivos
+    description: Endpoints para a gestão de arquivos.
+  - name: Prontuarios
+    description: Endpoints para a gestão de arquivos.
+  - name: Estatisticas
+    description: Endpoints para a gestão de estatísticas.
+  - name: Avaliacoes
+    description: Endpoints para a gestão de avaliações.
+paths:
+  /dados-pessoais/{id}:
+    get:
+      summary: Lista os dados pessoais presentes no sistema
+      description: Lista os dados pessoais presentes no sistema
+      operationId: get-dados-pessoais
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DadosPessoais'
+              examples:
+                E1:
+                  value:
+                    Id: 1
+                    Dados:
+                      - Tipo: 'Documento'
+                        Nome: 'RG'
+                        Valor: '101110001'
+                        Identificador: '1'
+                      - Tipo: 'Telefone'
+                        Nome: 'Telefone 1'
+                        Valor: '+5521XXXXXXXX'
+                        Identificador: '2'
+                      - Tipo: 'Endereço'
+                        Nome: 'Endereço 1'
+                        Valor: 'Rua Tal, Número Tal.'
+                        Identificador: '2'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - DadosPessoais
+  /dados-pessoais:
+    post:
+      summary: Solicita a deleção de dados pessoais
+      description: Solicita a deleção de dados pessoais
+      operationId: post-dados-pessoais
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DadosPessoais'
+            examples:
+                E1:
+                  value:
+                    Id: 1
+                    Dados:
+                      - Tipo: 'Documento'
+                        Nome: 'RG'
+                        Valor: '101110001'
+                        Identificador: '1'
+                      - Tipo: 'Telefone'
+                        Nome: 'Telefone 1'
+                        Valor: '+5521XXXXXXXX'
+                        Identificador: '2'
+                      - Tipo: 'Endereço'
+                        Nome: 'Endereço 1'
+                        Valor: 'Rua Tal, Número Tal.'
+                        Identificador: '2'
+      responses:
+        '200':
+          description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - DadosPessoais
+  /equipes:
+    get:
+      summary: Lista equipes
+      description: Lista equipes
+      operationId: get-equipes
+      parameters:
+        - in: query
+          name: id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: owner
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: member
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: manager
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+            description: Sucesso.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Equipe'
+                examples:
+                  E1:
+                    $ref: '#/components/examples/Equipes'
+      tags:
+        - Equipes
+    put:
+      summary: Cria uma equipe
+      description: Cria uma equipe
+      operationId: put-equipes
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Equipe'
+            examples:
+              E1:
+                $ref: '#/components/examples/Equipe'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'  
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Equipes
+    post:
+      summary: Altera uma equipe
+      description: Altera uma equipe
+      operationId: post-equipes
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Equipe'
+            examples:
+              E1:
+                value:
+                  Id: 1
+                  Descricao: 'Equipe de profissionais da clínica X.'
+                  Nome: Profissionais da Clinica X
+                  Proprietarios: [1]
+                  MembrosUsuarios: [1]
+                  MembrosProfissionais: [2,3]
+                  MembrosEquipes: [1,2,3]
+                  Administradores: [1]
+                  AdministradoresCalendario: [1]
+                  Enderecos:
+                    - Nome: 'Consultório Centro'
+                      UF: 'RJ'
+                      Cidade: 'Rio de Janeiro'
+                      Bairro: 'Centro'
+                      Local: 'Rua da Assembléia'
+                    - Nome: 'Consultório Barra'
+                      UF: 'RJ'
+                      Cidade: 'Rio de Janeiro'
+                      Bairro: 'Barra'
+                      Local: 'Av. das Américas'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Equipes
+  /equipes/{id}:
+    delete:
+      summary: Exclui uma equipe
+      description: Exclui uma equipe
+      operationId: delete-equipes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Equipes
+  /horarios:
+    put:
+      summary: Adiciona um horário de Consultas
+      description: Adiciona um horário de Consultas
+      operationId: put-horarios
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Horario'
+            examples:
+              E1:
+                $ref: '#/components/examples/Horario'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Horarios
+    post:
+      summary: Altera um horário de Consultas
+      description: Altera um horário de Consultas
+      operationId: post-horarios
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Horario'
+            examples:
+              E1:
+                $ref: '#/components/examples/Horario'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Horarios
+  /horarios/{id}:
+    get:
+      summary: Lista horários
+      description: Lista horários
+      operationId: get-horarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Horario'
+              examples:
+                E1:
+                  $ref: '#/components/examples/Horarios'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Horarios
+    delete:
+      summary: Exclui um horário de Consultas
+      description: Exclui um horário de Consultas
+      operationId: delete-horarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Horarios
+  /variaveis/{id}:
+    get:
+      summary: Lista uma variável
+      description: Lista uma variável
+      operationId: get-variavel
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+            description: Sucesso.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Variavel'
+                examples:
+                  E1:
+                    $ref: '#/components/examples/VariavelQuantitativa'
+                  E2:
+                    $ref: '#/components/examples/VariavelQualitativa'
+                  E3:
+                    $ref: '#/components/examples/VariavelEnumerativa'
+                  E4:
+                    $ref: '#/components/examples/VariavelDiscreta'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Variaveis
+    delete:
+      summary: Exclui uma variável
+      description: Exclui uma variável
+      operationId: delete-variaveis
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Variaveis
+  /variaveis:
+    get:
+      summary: Lista variáveis
+      description: Lista variáveis
+      operationId: get-variaveis
+      responses:
+        '200':
+            description: Sucesso.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Variavel'
+                examples:
+                  E1:
+                    $ref: '#/components/examples/Variaveis'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Variaveis
+    put:
+      summary: Cria uma variável
+      description: Cria uma variável
+      operationId: put-variaveis
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Variavel'
+            examples:
+              E1:
+                $ref: '#/components/examples/VariavelEnumerativa'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Variaveis
+    post:
+      summary: Altera uma variável
+      description: Altera uma variável
+      operationId: post-variaveis
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Variavel'
+            examples:
+              E1:
+                $ref: '#/components/examples/VariavelDiscreta'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Variaveis
+  /exames:
+    get:
+      summary: Lista exames
+      description: Lista exames
+      operationId: get-exames
+      responses:
+        '200':
+            description: Sucesso.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Exame'
+                examples:
+                  E1:
+                    $ref: '#/components/examples/ExameIMC'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Exames
+    put:
+      summary: Cria um exame ou teste
+      description: Cria um exame ou teste
+      operationId: put-exames
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Exame'
+            examples:
+              E1:
+                $ref: '#/components/examples/ExameIMC'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Exames
+    post:
+      summary: Alterar um exame ou teste
+      description: Alterar um exame ou teste
+      operationId: post-exames
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Exame'
+            examples:
+              E1:
+                $ref: '#/components/examples/ExameIMC'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Exames
+  /exames/{id}:
+    delete:
+      summary: Exclui um exame ou teste
+      description: Exclui um exame ou teste
+      operationId: delete-exames
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Exames
+  /profissionais:
+    get:
+      summary: Lista profissionais
+      description: Lista profissionais
+      operationId: get-profissionais
+      parameters:
+        - in: query
+          name: area
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: especializacao
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: uf
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: cidade
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: bairro
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Profissional'
+              examples:
+                E1:
+                  $ref: '#/components/examples/Profissionais'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Profissionais
+  /consultas:
+    put:
+      summary: Agenda um consulta
+      description: Agenda um consulta
+      operationId: put-consultas
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Horario'
+            examples:
+                E1:
+                  $ref: '#/components/examples/HorarioConsulta'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+      tags:
+        - Consultas
+    post:
+      summary: Altera o status de uma consulta
+      description: Altera o status de uma consulta
+      operationId: post-consultas
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Horario'
+            examples:
+                E1:
+                  $ref: '#/components/examples/HorarioConsulta'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+      tags:
+        - Consultas
+  /consultas/{id}:
+    get:
+      summary: Lista consultas
+      description: Lista consultas
+      operationId: get-consultas
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Horario'
+              examples:
+                E1:
+                  $ref: '#/components/examples/Consultas'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Consultas
+    delete:
+      summary: Exclui uma consulta
+      description: Exclui uma consulta
+      operationId: delete-consultas
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Consultas
+  /exames/resultados:
+    get:
+      summary: Lista resultado
+      description: Lista resultado
+      operationId: get-exames-resultados
+      parameters:
+        - in: query
+          name: paciente
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: profissional
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: equipe
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: inicio
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: fim
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resultado'
+              examples:
+                E1:
+                  $ref: '#/components/examples/Resultados'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Resultados
+    put:
+      summary: Salva um resultado
+      description: Salva um resultado
+      operationId: put-exames-resultados
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resultado'
+            examples:
+                E1:
+                  $ref: '#/components/examples/Resultado'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+      tags:
+        - Resultados
+    post:
+      summary: Altera um resultado
+      description: Altera um resultado
+      operationId: post-exames-resultados
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resultado'
+            examples:
+                E1:
+                  $ref: '#/components/examples/Resultado'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+      tags:
+        - Resultados
+  /exames/resultados/{id}:
+    delete:
+      summary: Exclui um sub-resultado
+      description: Exclui um resultado
+      operationId: delete-exames-resultados
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Resultados
+  /exames/resultados/agrupador/{id}:
+    delete:
+      summary: Exclui um resultado e seus sub-resultados.
+      description: Exclui um resultado
+      operationId: delete-exames-resultados-agrupador
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Resultados
+  /anotacoes:
+    get:
+      summary: Lista anotações
+      description: Lista anotações
+      operationId: get-anotacoes
+      parameters:
+        - in: query
+          name: id
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: paciente
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: profissional
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: equipe
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: inicio
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fim
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: diagnostico
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Objeto'
+              examples:
+                E1:
+                  $ref: '#/components/examples/Anotacoes'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Anotacoes
+    put:
+      summary: Cria uma anotação
+      description: Cria uma anotação
+      operationId: put-anotacoes
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Objeto'
+            examples:
+                E1:
+                  $ref: '#/components/examples/ObjetoAnotacao'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+      tags:
+        - Anotacoes
+    post:
+      summary: Altera uma anotação
+      description: Altera uma anotação
+      operationId: post-anotacoes
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Objeto'
+            examples:
+                E1:
+                  $ref: '#/components/examples/ObjetoAnotacao'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+      tags:
+        - Anotacoes
+  /anotacoes/{id}:
+    delete:
+      summary: Exclui uma anotação
+      description: Exclui uma anotação
+      operationId: delete-anotacoes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Anotacoes
+  /arquivos:
+    get:
+      summary: Lista arquivos
+      description: Lista arquivos
+      operationId: get-arquivos
+      parameters:
+        - in: query
+          name: id
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: paciente
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: profissional
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: equipe
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: inicio
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fim
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: diagnostico
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Objeto'
+              examples:
+                E1:
+                  $ref: '#/components/examples/Arquivos'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Arquivos
+    put:
+      summary: Cria um arquivo
+      description: Cria um arquivo
+      operationId: put-arquivos
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Objeto'
+            examples:
+                E1:
+                  $ref: '#/components/examples/ObjetoArquivo'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+      tags:
+        - Arquivos
+    post:
+      summary: Altera um arquivo
+      description: Altera um arquivo
+      operationId: post-arquivos
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Objeto'
+            examples:
+                E1:
+                  $ref: '#/components/examples/ObjetoArquivo'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+      tags:
+        - Arquivos
+  /arquivos/{id}:
+    delete:
+      summary: Exclui um arquivo
+      description: Exclui um arquivo
+      operationId: delete-arquivos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Arquivos
+  /prontuarios/profissionais/{id}:
+    get:
+      summary: Lista os pacientes que possuem prontuário para este profissional
+      description: Lista os pacientes que possuem prontuário para este profissional
+      operationId: get-prontuarios-profissionais
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Id'
+              examples:
+                E1:
+                  value:
+                    - Id: 1
+                      Nome: 'Bob'
+                    - Id: 2
+                      Nome: 'Alice'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Prontuarios
+  /prontuarios/equipes/{id}:
+    get:
+      summary: Lista os pacientes que possuem prontuário para esta equipe
+      description: Lista os pacientes que possuem prontuário para esta equipe
+      operationId: get-prontuarios-equipes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Id'
+              examples:
+                E1:
+                  value:
+                    - Id: 1
+                      Nome: 'Bob Team'
+                    - Id: 2
+                      Nome: 'Alice Team'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Prontuarios
+  /prontuarios/{id}:
+    get:
+      summary: Lista os objetos do prontuário de um paciente
+      description: Lista os objetos do prontuário de um paciente
+      operationId: get-prontuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prontuario'
+              examples:
+                E1:
+                  $ref: '#/components/examples/Prontuario'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Prontuarios
+  /estatisticas/consultas/{id}:
+    get:
+      summary: Lista o número de consultas
+      description: Lista o número de consultas
+      operationId: get-estatisticas-consultas
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosConsolidados'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/historico/consultas/{id}:
+    get:
+      summary: Lista o número de consultas
+      description: Lista o número de consultas
+      operationId: get-estatisticas-historico-consultas
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: inicio
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fim
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: passo
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosParaGrafico'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/exames/{id}:
+    get:
+      summary: Lista o número de exames
+      description: Lista o número de exames
+      operationId: get-estatisticas-exames
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosConsolidados'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/historico/exames/{id}:
+    get:
+      summary: Lista o número de exames
+      description: Lista o número de exames 
+      operationId: get-estatisticas-historico-exames
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: inicio
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fim
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: passo
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosParaGrafico'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/exames/pacientes/{id}:
+    get:
+      summary: Lista o número de pacientes
+      description: Lista o número de pacientes
+      operationId: get-estatisticas-exames-pacientes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosConsolidados'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/historico/exames/pacientes/{id}:
+    get:
+      summary: Lista o número de pacientes
+      description: Lista o número de pacientes
+      operationId: get-estatisticas-historico-exames-pacientes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: inicio
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fim
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: passo
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosParaGrafico'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/visualizacoes/{id}:
+    get:
+      summary: Lista o número de visualizações
+      description: Lista o número de visualizações
+      operationId: get-estatisticas-visualizacoes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosConsolidados'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/historico/visualizacoes/{id}:
+    get:
+      summary: Lista o número de vizualizações
+      description: Lista o número de visualizações
+      operationId: get-estatisticas-historico-visualizacoes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: inicio
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fim
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: passo
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosParaGrafico'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/avaliacoes/{id}:
+    get:
+      summary: Lista o número de avaliações
+      description: Lista o número de avaliações
+      operationId: get-estatisticas-avaliacoes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosConsolidados'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/historico/avaliacoes/{id}:
+    get:
+      summary: Lista o número de avaliações
+      description: Lista o número de avaliações
+      operationId: get-estatisticas-historico-avaliacoes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: inicio
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fim
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: passo
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosParaGrafico'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/avaliacoes/media/{id}:
+    get:
+      summary: Lista a nota média
+      description: Lista a nota média
+      operationId: get-estatisticas-avaliacoes-media
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosConsolidados'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/historico/avaliacoes/media/{id}:
+    get:
+      summary: Lista a nota média
+      description: Lista a nota média
+      operationId: get-estatisticas-historico-avaliacoes-media
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: inicio
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fim
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: passo
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosParaGrafico'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/avaliacoes/valores/{id}:
+    get:
+      summary: Lista o número de avaliações por nota
+      description: Lista o número de avaliações por nota
+      operationId: get-estatisticas-avaliacoes-valores
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosConsolidados'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /estatisticas/historico/avaliacoes/valores/{id}:
+    get:
+      summary: Lista o número de avaliações por nota
+      description: Lista o número de avaliações por nota
+      operationId: get-estatisticas-historico-avaliacoes-valores
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: inicio
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: fim
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: passo
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DadosParaGrafico'
+              examples:
+                E1:
+                  $ref: '#/components/examples/DadosParaGrafico'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Estatisticas
+  /avaliacoes:
+    get:
+      summary: Lista avaliações
+      description: Lista avaliações
+      operationId: get-avaliacoes
+      parameters:
+        - in: query
+          name: id
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: paciente_email
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: profissional
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Avaliacao'
+              examples:
+                E1:
+                  $ref: '#/components/examples/Avaliacoes'
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Avaliacoes
+    put:
+      summary: Cria uma avaliação
+      description: Cria uma avaliação
+      operationId: put-avaliacoes
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Avaliacao'
+            examples:
+                E1:
+                  $ref: '#/components/examples/Avaliacao'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+      tags:
+        - Avaliacoes
+  /avaliacoes/{id}:
+    delete:
+      summary: Exclui uma avaliação
+      description: Exclui uma avaliação
+      operationId: delete-avaliacoes
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Avaliacoes
+  /enderecos:
+    get:
+      summary: Lista endereços
+      description: Lista endereços
+      operationId: get-enderecos
+      parameters:
+        - in: query
+          name: usuario
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: equipe
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+            description: Sucesso.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/EnderecoItem'
+                examples:
+                  E1:
+                    $ref: '#/components/examples/Enderecos'
+      tags:
+        - Enderecos
+  /enderecos/usuario/{id}:
+    put:
+      summary: Cria um endereço
+      description: Cria um endereço
+      operationId: put-usuario-endereco
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnderecoItem'
+            examples:
+              E1:
+                $ref: '#/components/examples/Endereco'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'  
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Enderecos
+    post:
+      summary: Altera um endereço
+      description: Altera um endereço
+      operationId: post-usuario-endereco
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnderecoItem'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Enderecos
+    delete:
+      summary: Exclui um endereço
+      description: Exclui um endereço
+      operationId: delete-usuario-endereco
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Enderecos
+  /enderecos/equipe/{id}:
+    put:
+      summary: Cria um endereço
+      description: Cria um endereço
+      operationId: put-equipe-endereco
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnderecoItem'
+            examples:
+              E1:
+                $ref: '#/components/examples/Endereco'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'  
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Enderecos
+    post:
+      summary: Altera um endereço
+      description: Altera um endereço
+      operationId: post-equipe-endereco
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Corpo da requisição.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnderecoItem'
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Enderecos
+    delete:
+      summary: Exclui um endereço
+      description: Exclui um endereço
+      operationId: delete-equipe-endereco
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+            description: Sucesso.
+        '4XX':
+          description: Erro.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+        default:
+          description: Resposta padrão de erro
+      tags:
+        - Enderecos
+components:
+  securitySchemes:
+      BearerAuth:
+        type: http
+        scheme: bearer
+      OAuth2:
+        type: oauth2
+        flows:
+          authorizationCode:
+            authorizationUrl: https://localhost
+            tokenUrl: https://localhost
+            scopes:
+              escopo: Escopo
+  schemas:
+    Id:
+      type: object
+      properties:
+        Id:
+          type: integer
+        Nome:
+          type: string
+    Erro:
+      type: object
+      required:
+        - Message
+      properties:
+        Mensagem:
+          type: string
+        Erros:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErroItem'
+    ErroItem:
+      type: object
+      properties:
+        Campo:
+          type: string
+        Mensagem:
+          type: string
+    DadosPessoais:
+      type: object
+      properties:
+        Id:
+          type: integer
+        Dados:
+          type: array
+          items:
+            $ref: '#/components/schemas/DadosItem'
+    DadosItem:
+      type: object
+      required:
+        - Tipo
+        - Identificador
+      properties:
+        Tipo:
+          type: string
+        Nome:
+          type: string
+        Valor:
+          type: string
+        Identificador:
+          type: string
+    Equipe:
+      type: object
+      properties:
+        Id:
+          type: integer
+        Descricao:
+          type: string
+        Nome:
+          type: string
+        Proprietarios:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+        MembrosUsuarios:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+        MembrosProfissionais:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+        MembrosEquipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+        Administradores:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+        AdministradoresCalendario:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+        Enderecos:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnderecoItem'
+    EnderecoItem:
+      type: object
+      properties:
+        Nome:
+          type: string
+        UF:
+          type: string
+        Cidade:
+          type: string
+        Bairro:
+          type: string
+        Local:
+          type: string
+    Variavel:
+      type: object
+      required:
+        - Nome
+        - NomeCurto
+        - Descricao
+        - Tipo
+        - Escopo
+      properties:
+        Id:
+          type: integer
+        Versao:
+          type: integer
+        Nome:
+          type: string
+        NomeCurto:
+          type: string
+        Descricao:
+          type: string
+        Tipo:
+          type: string
+        DataCriacao:
+          type: string
+          format: date
+        DataDelecao:
+          type: string
+          format: date
+        Proprietario:
+          $ref: '#/components/schemas/Proprietario'
+        Escopo:
+          $ref: '#/components/schemas/EscopoItem'
+        Valores:
+          type: array
+          items:
+            type: string
+        Unidade:
+          type: string
+        UnidadeSimbolo:
+          type: string
+        Minimo:
+          type: number
+        Maximo:
+          type: number
+        Passo:
+          type: number
+    Proprietario:
+      type: object
+      properties:
+        Nome:
+          type: string
+        Id:
+          type: integer
+    EscopoItem:
+      type: object
+      required:
+        - Tipo
+      properties:
+        Tipo:
+          type: string
+        Id:
+          type: integer
+    Exame:
+      type: object
+      properties:
+        Id:
+          type: integer
+        Versao:
+          type: integer
+        Nome:
+          type: string
+        NomeCurto:
+          type: string
+        Descricao:
+          type: string
+        DataCriacao:
+          type: string
+          format: date
+        DataDelecao:
+          type: string
+          format: date
+        Proprietario:
+          $ref: '#/components/schemas/Proprietario'
+        Escopo:
+          $ref: '#/components/schemas/EscopoItem'
+        Itens:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExameItem'
+    ExameItem:
+      type: object
+      properties:
+        Pergunta:
+          type: string
+        Variavel:
+          $ref: '#/components/schemas/Variavel'
+    Horario:
+      type: object
+      properties:
+        Id:
+          type: integer
+        Profissional:
+          type: integer
+        Equipe:
+          type: integer
+        Endereco:
+          $ref: '#/components/schemas/EnderecoItem'
+        Data:
+          type: string
+          format: date
+        Hora:
+          type: string
+          format: time
+        Disponivel:
+          type: boolean
+        Situacao:
+          type: string
+        PacienteNome:
+          type: string
+        PacienteTelefone:
+          type: string
+        PacienteEmail:
+          type: string
+          format: email
+    Profissional:
+      type: object
+      properties:
+        Id:
+          type: integer
+        Nome:
+          type: string
+        Area:
+          type: string
+        Especializacoes:
+          type: array
+          items:
+            type: string
+        Descricao:
+          type: string
+        Enderecos:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnderecoItem'
+    Objeto:
+      type: object
+      properties:
+        Id:
+          type: string
+        Versao:
+          type: integer
+        Nome:
+          type: string
+        Tipo:
+          type: string
+        Descricao:
+          type: string
+        DataCriacao:
+          type: string
+          format: date
+        DataModificacao:
+          type: string
+          format: date
+        Proprietario:
+          $ref: '#/components/schemas/Proprietario'
+        Paciente:
+          $ref: '#/components/schemas/Proprietario'
+        Escopo:
+          $ref: '#/components/schemas/EscopoItem'
+        Diagnosticos:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiagnosticoItem'
+        CorpoAnotacao:
+          type: string
+        URL:
+          type: string
+          format: url
+        ItensColecao:
+          type: array
+          items:
+            type: integer
+    Avaliacao:
+      type: object
+      properties:
+        Id:
+          type: string
+        Profissional:
+          type: integer
+        Avaliador:
+          type: string
+        AvaliadorTelefone:
+          type: string
+        AvaliadorEmail:
+          type: string
+        Data:
+          type: string
+          format: date
+        Titulo:
+          type: string
+          format: date
+        Corpo:
+          type: string
+        Nota:
+          type: number
+    DiagnosticoItem:
+      type: object
+      properties:
+        Id:
+          type: integer
+        Codigo:
+          type: string
+        Nome:
+          type: string
+    Resultado:
+      type: object
+      properties:
+        Id:
+          type: integer
+        IdAgrupador:
+          type: integer
+        Teste:
+          type: integer
+        Variavel:
+          type: integer
+        Valor:
+          type: string
+        Data:
+          type: string
+          format: date-time
+        Escopo:
+          $ref: '#/components/schemas/EscopoItem'
+    Prontuario:
+      type: object
+      properties:
+        Paciente:
+          $ref: '#/components/schemas/Id'
+        Consultas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Horario'
+        Objetos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Objeto'
+    DadosParaGrafico:
+      type: object
+      properties:
+        Legendas:
+          type: array
+          items:
+            type: string
+        Agrupamentos:
+          type: array
+          items:
+            type: object
+            properties:
+              Nome:
+                type: string
+              Legendas:
+                type: string
+              Dados:
+                type: array
+                items:
+                  type: number
+  examples:
+    VariavelQuantitativa:
+      value:
+        Id: 1
+        Versao: 1
+        Nome: 'Altura de uma pessoa'
+        NomeCurto: 'Altura'
+        Descricao: 'Altura de uma pessoa'
+        Tipo: 'Quantitativa'
+        DataCriacao: ''
+        DataDelecao: ''
+        Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+        Escopo: { Tipo: 'Sistema' }
+        Valores: null
+        Unidade: 'metros'
+        UnidadeSimbolo: 'm'
+        Minimo: 0
+        Maximo: 3
+        Passo: null
+    VariavelQualitativa:
+      value:
+        Id: 2
+        Versao: 4
+        Nome: 'Relato de sintomas pelo paciente'
+        NomeCurto: 'Relato de sintomas'
+        Descricao: 'Relato de sintomas pelo paciente'
+        Tipo: 'Qualitativa'
+        DataCriacao: ''
+        DataDelecao: ''
+        Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+        Escopo: { Tipo: 'Sistema' }
+        Valores: null
+        Unidade: null
+        UnidadeSimbolo: null
+        Minimo: null
+        Maximo: null
+        Passo: null
+    VariavelEnumerativa:
+      value:
+        Id: 3
+        Versao: 2
+        Nome: 'Estado Civil'
+        NomeCurto: 'Estado Civil'
+        Descricao: 'Estado Civil'
+        Tipo: 'Enumerativa'
+        DataCriacao: '2023-01-22T12:51:36.496Z'
+        DataDelecao: '2023-01-22T12:51:36.496Z'
+        Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+        Escopo: { Tipo: 'Sistema' }
+        Valores: ['Solteiro(a)','Casado(a)','Divorciado(a)','Viúvo(a)']
+        Unidade: null
+        UnidadeSimbolo: null
+        Minimo: null
+        Maximo: null
+        Passo: null
+    VariavelDiscreta:
+      value:
+        Id: 4
+        Versao: 1
+        Nome: 'Resultado escala A'
+        NomeCurto: 'Resultado escala A'
+        Descricao: 'Resultado escala A'
+        Tipo: 'Enumerativa'
+        DataCriacao: '2023-01-22T12:51:36.496Z'
+        DataDelecao: '2023-01-22T12:51:36.496Z'
+        Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+        Escopo: { Tipo: 'Sistema' }
+        Valores: null
+        Unidade: null
+        UnidadeSimbolo: null
+        Minimo: 0
+        Maximo: 10
+        Passo: 1
+    Variaveis:
+      value:
+        - Id: 1
+          Versao: 1
+          Nome: 'Altura de uma pessoa'
+          NomeCurto: 'Altura'
+          Descricao: 'Altura de uma pessoa'
+          Tipo: 'Quantitativa'
+          DataCriacao: ''
+          DataDelecao: ''
+          Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+          Escopo: { Tipo: 'Sistema' }
+          Valores: null
+          Unidade: 'metros'
+          UnidadeSimbolo: 'm'
+          Minimo: 0
+          Maximo: 3
+          Passo: null
+        - Id: 2
+          Versao: 2
+          Nome: 'Relato de sintomas pelo paciente'
+          NomeCurto: 'Relato de sintomas'
+          Descricao: 'Relato de sintomas pelo paciente'
+          Tipo: 'Qualitativa'
+          DataCriacao: ''
+          DataDelecao: ''
+          Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+          Escopo: { Tipo: 'Sistema' }
+          Valores: null
+          Unidade: null
+          UnidadeSimbolo: null
+          Minimo: null
+          Maximo: null
+          Passo: null
+        - Id: 3
+          Versao: 1
+          Nome: 'Estado Civil'
+          NomeCurto: 'Estado Civil'
+          Descricao: 'Estado Civil'
+          Tipo: 'Enumerativa'
+          DataCriacao: '2023-01-22T12:51:36.496Z'
+          DataDelecao: '2023-01-22T12:51:36.496Z'
+          Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+          Escopo: { Tipo: 'Sistema' }
+          Valores: ['Solteiro(a)','Casado(a)','Divorciado(a)','Viúvo(a)']
+          Unidade: null
+          UnidadeSimbolo: null
+          Minimo: null
+          Maximo: null
+          Passo: null
+        - Id: 4
+          Versao: 3
+          Nome: 'Resultado escala A'
+          NomeCurto: 'Resultado escala A'
+          Descricao: 'Resultado escala A'
+          Tipo: 'Enumerativa'
+          DataCriacao: '2023-01-22T12:51:36.496Z'
+          DataDelecao: '2023-01-22T12:51:36.496Z'
+          Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+          Escopo: { Tipo: 'Sistema' }
+          Valores: null
+          Unidade: null
+          UnidadeSimbolo: null
+          Minimo: 0
+          Maximo: 10
+          Passo: 1
+    ExameIMC:
+      value:
+        Id: 1
+        Versao: 1
+        Nome: 'Índice de massa corporal'
+        NomeCurto: 'IMC'
+        Descricao: 'Índice de massa corporal'
+        DataCriacao: '2023-01-22T12:51:36.496Z'
+        DataDelecao: '2023-01-22T12:51:36.496Z'
+        Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+        Escopo: { Tipo: 'Sistema' }
+        Itens:
+          - Pergunta: 'Qual é o seu peso?'
+            Variavel:
+              Id: 1010
+              Nome: 'Massa ou "peso" de uma pessoa'
+              NomeCurto: 'Massa corporal ("peso")'
+              Descricao: 'Massa ou "peso" de uma pessoa em kg'
+              Tipo: 'Quantitativa'
+              DataCriacao: '2023-01-22T12:51:36.496Z'
+              DataDelecao: '2023-01-22T12:51:36.496Z'
+              Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+              Escopo: { Tipo: 'Sistema' }
+              Valores: null
+              Unidade: 'quilogramas'
+              UnidadeSimbolo: 'km'
+              Minimo: null
+              Maximo: null
+              Passo: null
+          - Pergunta: 'Qual é a sua altura?'
+            Variavel:
+              Id: 1
+              Nome: 'Altura de uma pessoa'
+              NomeCurto: 'Altura'
+              Descricao: 'Altura de uma pessoa'
+              Tipo: 'Quantitativa'
+              DataCriacao: ''
+              DataDelecao: ''
+              Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+              Escopo: { Tipo: 'Sistema' }
+              Valores: null
+              Unidade: 'metros'
+              UnidadeSimbolo: 'm'
+              Minimo: 0
+              Maximo: 3
+              Passo: null
+    Horario:
+      value:
+        Id: null
+        Profissional: { Nome: 'Fulano de Tal', Id: 4055 }
+        Equipe: 10
+        Endereco: {
+          Nome: 'Consultório 1',
+          UF: 'RJ',
+          Cidade: 'Rio de Janeiro',
+          Bairro: 'Centro',
+          Local: 'Rua da Assembléia, 10, sl 500'
+        }
+        Data: '2023-05-01'
+        Hora: '08:00'
+        Disponivel: true
+        Situacao: 'Disponível'
+        PacienteNome: null
+        PacienteTelefone: null
+        PacienteEmail: null
+    Horarios:
+      value:
+        - Id: 1010
+          Profissional: { Nome: 'Fulano de Tal', Id: 4055 }
+          Equipe: 10
+          Endereco: {
+            Nome: 'Consultório 1',
+            UF: 'RJ',
+            Cidade: 'Rio de Janeiro',
+            Bairro: 'Centro',
+            Local: 'Rua da Assembléia, 10, sl 500'
+          }
+          Data: '2023-05-01'
+          Hora: '08:00'
+          Disponivel: true
+          Situacao: 'Disponível'
+          PacienteNome: null
+          PacienteTelefone: null
+          PacienteEmail: null
+        - Id: 2020
+          Profissional: { Nome: 'Fulano de Tal', Id: 4055 }
+          Equipe: 10
+          Endereco: {
+            Nome: 'Consultório 1',
+            UF: 'RJ',
+            Cidade: 'Rio de Janeiro',
+            Bairro: 'Centro',
+            Local: 'Rua da Assembléia, 10, sl 500'
+          }
+          Data: '2023-05-01'
+          Hora: '08:30'
+          Disponivel: true
+          Situacao: 'Disponível'
+          PacienteNome: null
+          PacienteTelefone: null
+          PacienteEmail: null
+        - Id: 3030
+          Profissional: { Nome: 'Fulano de Tal', Id: 4055 }
+          Equipe: 10
+          Endereco: {
+            Nome: 'Consultório 1',
+            UF: 'RJ',
+            Cidade: 'Rio de Janeiro',
+            Bairro: 'Centro',
+            Local: 'Rua da Assembléia, 10, sl 500'
+          }
+          Data: '2023-05-01'
+          Hora: '09:00'
+          Disponivel: true
+          Situacao: 'Disponível'
+          PacienteNome: null
+          PacienteTelefone: null
+          PacienteEmail: null
+    Consultas:
+      value:
+        - Id: 2020
+          Profissional: { Nome: 'Fulano de Tal', Id: 4055 }
+          Equipe: 10
+          Endereco: {
+            Nome: 'Consultório 1',
+            UF: 'RJ',
+            Cidade: 'Rio de Janeiro',
+            Bairro: 'Centro',
+            Local: 'Rua da Assembléia, 10, sl 500'
+          }
+          Data: '2023-05-01'
+          Hora: '08:00'
+          Disponivel: false
+          Situacao: 'Agendado'
+          PacienteNome: 'João da Silva'
+          PacienteTelefone: null
+          PacienteEmail: 'joao.silva@dominio.com.br'
+        - Id: 3030
+          Profissional: { Nome: 'Fulano de Tal', Id: 4055 }
+          Equipe: 10
+          Endereco: {
+            Nome: 'Consultório 1',
+            UF: 'RJ',
+            Cidade: 'Rio de Janeiro',
+            Bairro: 'Centro',
+            Local: 'Rua da Assembléia, 10, sl 500'
+          }
+          Data: '2023-05-01'
+          Hora: '08:00'
+          Disponivel: false
+          Situacao: 'Agendado'
+          PacienteNome: 'João da Silva'
+          PacienteTelefone: null
+          PacienteEmail: 'joao.silva@dominio.com.br'
+    HorarioConsulta:
+      value:
+        Id: 2020
+        Profissional: { Nome: 'Fulano de Tal', Id: 4055 }
+        Equipe: 10
+        Endereco: {
+          Nome: 'Consultório 1',
+          UF: 'RJ',
+          Cidade: 'Rio de Janeiro',
+          Bairro: 'Centro',
+          Local: 'Rua da Assembléia, 10, sl 500'
+        }
+        Data: '2023-05-01'
+        Hora: '08:00'
+        Disponivel: false
+        Situacao: 'Agendado'
+        PacienteNome: 'João da Silva'
+        PacienteTelefone: null
+        PacienteEmail: 'joao.silva@dominio.com.br'
+    Profissionais:
+      value:
+        - Id: 12310
+          Nome: 'Fulano de Tal'
+          Area: 'Cardiologia'
+          Especializacoes: null
+          Descricao: 'Graduado em Cardiologia pela Universidade X, possui Y anos de experiência consultas cardiológicas.'
+          Enderecos:
+            - Nome: 'Consultório 1'
+              UF: 'RJ'
+              Cidade: 'Rio de Janeiro'
+              Bairro: 'Centro'
+              Local: 'Rua da Assembléia, 10, sl 500'
+            - Nome: 'Consultório 2'
+              UF: 'RJ'
+              Cidade: 'Rio de Janeiro'
+              Bairro: 'Barra'
+              Local: 'Avenida da Américas, 1010, sl 630'
+        - Id: 12320
+          Nome: 'Ciclana de Lá'
+          Area: 'Terapeuta Ocupacional'
+          Especializacoes: null
+          Descricao: 'Graduado em Terapia Ocupacional pela Universidade X, possui Y anos de experiência cuidados paliativos.'
+          Enderecos:
+            - Nome: 'Consultório 1'
+              UF: 'RJ'
+              Cidade: 'Rio de Janeiro'
+              Bairro: 'Copacabana'
+              Local: 'Rua Nome da Rua, 10, sl 500'
+            - Nome: 'Consultório 2'
+              UF: 'RJ'
+              Cidade: 'Rio de Janeiro'
+              Bairro: 'Tijuca'
+              Local: 'Avenida Qualquer Coisa, 1010, sl 630'
+    ObjetoAnotacao:
+      value:
+        Id: 1
+        Versao: 1
+        Nome: null
+        Tipo: 'Anotação'
+        Descricao: null
+        DataCriacao: '2023-01-22T12:51:36.496Z'
+        DataModificacao: '2023-01-22T12:51:36.496Z'
+        Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+        Paciente: { Nome: 'Ciclana de Tal', Id: 5212 }
+        Escopo: { Tipo: 'Pessoal', Id: 2320 }
+        Diagnosticos: { Id: 10, Codigo: 'IN200-2', Nome: 'Nome do diagnóstico' }
+        CorpoAnotacao: 'Este é o corpo da anotação realizada pelo profissional de saúde.'
+        URL: null
+        ItensColecao: null
+    Anotacoes:
+      value:
+        - Id: 123
+          Versao: 1
+          Nome: null
+          Tipo: 'Anotação'
+          Descricao: null
+          DataCriacao: '2023-01-22T12:51:36.496Z'
+          DataModificacao: '2023-01-22T12:51:36.496Z'
+          Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+          Paciente: { Nome: 'Ciclana de Tal', Id: 5212 }
+          Escopo: { Tipo: 'Pessoal', Id: 2320 }
+          Diagnosticos: { Id: 10, Codigo: 'IN200-2', Nome: 'Nome do diagnóstico' }
+          CorpoAnotacao: 'Este é o corpo da anotação realizada pelo profissional de saúde.'
+          URL: null
+          ItensColecao: null
+        - Id: 125
+          Versao: 1
+          Nome: null
+          Tipo: 'Anotação'
+          Descricao: null
+          DataCriacao: '2023-01-22T12:51:36.496Z'
+          DataModificacao: '2023-01-22T12:51:36.496Z'
+          Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+          Paciente: { Nome: 'Ciclana de Tal', Id: 5212 }
+          Escopo: { Tipo: 'Equipe', Id: 2320 }
+          Diagnosticos: null
+          CorpoAnotacao: 'Este é o corpo da anotação realizada pelo profissional de saúde.'
+          URL: null
+          ItensColecao: null
+    ObjetoArquivo:
+      value:
+        Id: 1
+        Versao: 1
+        Nome: 'exame_20221003_joaosilva.pdf'
+        Tipo: 'Arquivo'
+        Descricao: 'Exames de rotina'
+        DataCriacao: '2023-01-22T12:51:36.496Z'
+        DataModificacao: '2023-01-22T12:51:36.496Z'
+        Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+        Paciente: { Nome: 'Ciclana de Tal', Id: 5212 }
+        Escopo: { Tipo: 'Pessoal', Id: 2320 }
+        Diagnosticos: null
+        CorpoAnotacao: null
+        URL: 'https://localhost/arquivos/'
+        ItensColecao: null
+    Arquivos:
+      value:
+        - Id: 1
+          Versao: 1
+          Nome: 'exame_20221003_joaosilva.pdf'
+          Tipo: 'Arquivo'
+          Descricao: 'Exames de rotina'
+          DataCriacao: '2023-01-22T12:51:36.496Z'
+          DataModificacao: '2023-01-22T12:51:36.496Z'
+          Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+          Paciente: { Nome: 'Ciclana de Tal', Id: 5212 }
+          Escopo: { Tipo: 'Pessoal', Id: 2320 }
+          Diagnosticos: null
+          CorpoAnotacao: null
+          URL: 'https://localhost/arquivos/'
+          ItensColecao: null
+        - Id: 2
+          Versao: 1
+          Nome: '20220418.pdf'
+          Tipo: 'Arquivo'
+          Descricao: 'Exame de PRL'
+          DataCriacao: '2023-01-22T12:51:36.496Z'
+          DataModificacao: '2023-01-22T12:51:36.496Z'
+          Proprietario: { Nome: 'Fulano de Tal', Id: 4055 }
+          Paciente: { Nome: 'Ciclana de Tal', Id: 5212 }
+          Escopo: { Tipo: 'Pessoal', Id: 2320 }
+          Diagnosticos: null
+          CorpoAnotacao: null
+          URL: 'https://localhost/arquivos/'
+          ItensColecao: null
+    Resultado:
+      value:
+        Id: null
+        IdAgrupador: null
+        Teste: 10
+        Variavel: 2020
+        Valor: '265,00'
+        Data:
+        Escopo: { Tipo: 'Equipe', Id: 50 }
+    Resultados:
+      value:
+        - Id: 109824
+          IdAgrupador: 90
+          Teste: 10
+          Variavel: 2020
+          Valor: '265,00'
+          Data:
+          Escopo: { Tipo: 'Equipe', Id: 50 }
+        - Id: 109473
+          IdAgrupador: 1001
+          Teste: 10
+          Variavel: 2020
+          Valor: '100,00'
+          Data:
+          Escopo: { Tipo: 'Pessoal', Id: 50 }
+        - Id: 109554
+          IdAgrupador: 1001
+          Teste: 10
+          Variavel: 2021
+          Valor: 'Tenho me sentido bem desde que comecei a tomar os medicamentos. Os sintomas que ainda persistem são dor de cabeça leve.'
+          Data:
+          Escopo: { Tipo: 'Pessoal', Id: 50 }
+    DadosParaGrafico:
+      value:
+        Legendas: [
+          '2022-01',
+          '2022-02',
+          '2022-03',
+          '2022-04',
+          '2022-05',
+          '2022-06',
+          '2022-07',
+          '2022-08',
+          '2022-09',
+          '2022-10',
+          '2022-11',
+          '2022-12'
+        ]
+        Agrupamentos:
+          - Nome: 'Nome'
+            Dados: [
+              10,
+              20,
+              30,
+              40,
+              50,
+              60,
+              70,
+              80,
+              90,
+              100,
+              110,
+              120
+            ]
+    DadosConsolidados:
+      value:
+        Legendas: ['Consolidado']
+        Agrupamentos: [
+          {Nome: 'Dia', Dados: '50'},
+          {Nome: 'Semana', Dados: '1000'},
+          {Nome: 'Mês', Dados: '4000'},
+          {Nome: 'Ano', Dados: '48000'}
+        ]
+    Prontuario:
+      value:
+        - Paciente:
+            Id: 1010
+            Nome: 'Bob'
+          Consultas:
+            - Id: 8010
+              Profissional: 4055
+              Equipe: 1002
+              Endereco:
+                Nome: 'Endereço 1'
+                UF: 'SP'
+                Cidade: 'São Paulo'
+                Bairro: 'Centro'
+                Local: 'Avenida Paulista, 3000, sl 205'
+              Data: '2023-01-25'
+              Hora: '09:00'
+              Disponivel: true
+              Situacao: 'Disponível'
+              PacienteNome: 'Ciclano da Silva'
+              PacienteTelefone: null
+              PacienteEmail: 'user@example.com'
+          Objetos:
+            - Id: 1198
+              Versao: 1
+              Nome: string
+              Tipo: string
+              Descricao: string
+              DataCriacao: '2023-01-25'
+              DataModificacao: '2023-01-25'
+              Proprietario:
+                Nome: string
+                Id: 0
+              Paciente:
+                Nome: string
+                Id: 0
+              Escopo:
+                Tipo: string
+                Id: 0
+              Diagnosticos:
+                - Id: 0
+                  Codigo: string
+                  Nome: string
+              CorpoAnotacao: string
+              URL: string
+              ItensColecao:
+                - 0
+            - Id: 1376
+              Versao: 2
+              Nome: string
+              Tipo: string
+              Descricao: string
+              DataCriacao: '2023-01-25'
+              DataModificacao: '2023-01-25'
+              Proprietario:
+                Nome: string
+                Id: 0
+              Paciente:
+                Nome: string
+                Id: 0
+              Escopo:
+                Tipo: string
+                Id: 0
+              Diagnosticos:
+                - Id: 0
+                  Codigo: string
+                  Nome: string
+              CorpoAnotacao: string
+              URL: string
+              ItensColecao:
+                - 0
+    Avaliacao:
+      value:
+        Id: null
+        Profissional: 4532
+        Avaliador: 'Maria'
+        AvaliadorTelefone: '+55 21 XXXX-5652'
+        AvaliadorEmail: 'maria*****a@domain.com'
+        Data: '2023-01-30'
+        Titulo: 'Muito bom!'
+        Corpo: 'Bla bla bla...'
+        Nota: 5
+    Avaliacoes:
+      value:
+        - Id: 1011
+          Profissional: 4532
+          Avaliador: 'Maria'
+          AvaliadorTelefone: '+55 21 XXXX-5652'
+          AvaliadorEmail: 'maria*****a@domain.com'
+          Data: '2023-01-30'
+          Titulo: 'Muito bom!'
+          Corpo: 'Bla bla bla...'
+          Nota: 5
+        - Id: 1015
+          Profissional: 4532
+          Avaliador: 'João'
+          AvaliadorTelefone: '+55 21 XXXX-5652'
+          AvaliadorEmail: 'jml*****a@domain.com'
+          Data: '2023-01-30'
+          Titulo: 'Muito ruim!'
+          Corpo: 'Bla bla bla...'
+          Nota: 1
+    Equipe:
+      value:
+        value:
+          Id: 1
+          Descricao: 'Equipe de profissionais da clínica X.'
+          Nome: Profissionais da Clinica X
+          Proprietarios: [1]
+          MembrosUsuarios: [1]
+          MembrosProfissionais: [2,3]
+          MembrosEquipes: [1,2,3]
+          Administradores: [1]
+          AdministradoresCalendario: [1]
+          Enderecos:
+            - Nome: 'Consultório Centro'
+              UF: 'RJ'
+              Cidade: 'Rio de Janeiro'
+              Bairro: 'Centro'
+              Local: 'Rua da Assembléia'
+            - Nome: 'Consultório Barra'
+              UF: 'RJ'
+              Cidade: 'Rio de Janeiro'
+              Bairro: 'Barra'
+              Local: 'Av. das Américas'
+    Equipes:
+      value:
+        - Id: 1
+          Descricao: 'Equipe de profissionais da clínica X.'
+          Nome: Profissionais da Clinica X
+          Proprietarios: [1]
+          MembrosUsuarios: [1]
+          MembrosProfissionais: [2,3]
+          MembrosEquipes: [1,2,3]
+          Administradores: [1]
+          AdministradoresCalendario: [1]
+          Enderecos:
+            - Nome: 'Consultório Centro'
+              UF: 'RJ'
+              Cidade: 'Rio de Janeiro'
+              Bairro: 'Centro'
+              Local: 'Rua da Assembléia'
+            - Nome: 'Consultório Barra'
+              UF: 'RJ'
+              Cidade: 'Rio de Janeiro'
+              Bairro: 'Barra'
+              Local: 'Av. das Américas'
+        - Id: 2
+          Descricao: 'Equipe de profissionais da clínica Y.'
+          Nome: Profissionais da Clinica X
+          Proprietarios: [1]
+          MembrosUsuarios: [1]
+          MembrosProfissionais: [2,3]
+          MembrosEquipes: [1,2,3]
+          Administradores: [1]
+          AdministradoresCalendario: [1]
+          Enderecos:
+            - Nome: 'Consultório Centro'
+              UF: 'RJ'
+              Cidade: 'Rio de Janeiro'
+              Bairro: 'Centro'
+              Local: 'Rua da Assembléia'
+            - Nome: 'Consultório Barra'
+              UF: 'RJ'
+              Cidade: 'Rio de Janeiro'
+              Bairro: 'Barra'
+              Local: 'Av. das Américas'
+    Endereco:
+      value:
+        Nome: "Consultório 1"
+        UF: "RJ"
+        Cidade: "Rio de Janeiro"
+        Bairro: "Centro"
+        Local: "Rua da Assembléia, 10, sl 500"
+    Enderecos:
+      value:
+        - Nome: "Consultório 1"
+          UF: "RJ"
+          Cidade: "Rio de Janeiro"
+          Bairro: "Centro"
+          Local: "Rua da Assembléia, 10, sl 500"
+        - Nome: "Consultório 2"
+          UF: "SP"
+          Cidade: "São Paulo"
+          Bairro: "Centro"
+          Local: "Avenida Paulista, 1000, sl 1200"
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/lucas-moura/visor-saude/v1.0.0
