@@ -6,3 +6,7 @@ Este repositório disponibiliza a definição de API REST feita para a aplicaç�
 
 1. Abra o editor online https://editor.swagger.io/
 2. Copie e cole o código do arquivo swagger.yaml no editor
+
+# Sobre a Open API Specification
+
+https://swagger.io/specification/
