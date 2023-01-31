@@ -1,6 +1,6 @@
 # Descrição
 
-Este repositório disponibiliza a definição feita para a aplicação Visor Saúde. A definição utiliza o padrão Open API Specification, seguindo a versão 3.
+Este repositório disponibiliza a definição de API REST feita para a aplicação Visor Saúde. Esta utiliza o padrão Open API Specification, seguindo a versão 3, e encontra-se no arquivo de nome 'swagger.yaml'.
 
 # Como visualizar o swagger?
 
